@@ -1,18 +1,62 @@
-import Task from "../models/Task"
+import Task from "../models/Task.js";
 
+export const getAllTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find().sort({ createdAt: -1 });
+    res.status(200).json(tasks);
+  } catch (error) {
+    console.error("Lỗi khi gọi getAllTasks", error);
+    res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
 
-export const getAllTasks = (req, res) => {
-    res.status(200).send("ban co 10 viec can lam")
-}
+export const createTask = async (req, res) => {
+  try {
+    const { title } = req.body;
+    const task = new Task({ title });
 
-export const createTask = (req, res) => {
-    res.status(201).json({message: "nhiem vu da duoc tao thanh cong"})
-}
+    const newTask = await task.save();
+    res.status(201).json(newTask);
+  } catch (error) {
+    console.error("Lỗi khi gọi createTask", error);
+    res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
 
-export const updateTask = (req, res) => {
-    res.status(200).json({message: "nhiem vu da duoc cap nhat thanh cong"})
-}
+export const updateTask = async (req, res) => {
+  try {
+    const {title, status, completedAt} = req.body 
+    const updatedTask = await Task.findByIdAndUpdate(
+        req.params.id,
+        {
+            title,
+            status,
+            completedAt,
+        },
+        { new: true }
+    )
 
-export const deleteTask = (req, res) => {
-    res.status(200).json({message: "nhiem vu da duoc xoa thanh cong"})
-}
+    if(!updatedTask){
+        return res.status(404).json({message: "Nhiệm vụ không tồn tại"})
+    }
+
+    res.status(200).json(updatedTask)
+  } catch (error) {
+    console.error("Lỗi khi gọi updateTask", error);
+    res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
+
+export const deleteTask = async (req, res) => {
+  try {
+    const deleteTask = await Task.findByIdAndDelete(req.params.id)
+
+    if (!deleteTask) {
+        return res.status(404).json({message: "Nhiệm vụ không tồn tại"})
+    }
+    res.status(200).json(deleteTask)
+  } catch (error) {
+    console.error("Lỗi khi gọi deleteTask", error);
+    res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
