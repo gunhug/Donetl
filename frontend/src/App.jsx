@@ -6,7 +6,6 @@ function App() {
   return (
     <>
       <Toaster />
-      <button onClick={() => toast("hello")}>toeaster</button>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
