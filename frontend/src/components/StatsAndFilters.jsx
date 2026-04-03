@@ -8,6 +8,7 @@ const StatsAndFilters = ({
   completedTasksCount = 0,
   activeTasksCount = 0,
   filter = "all",
+  setFilter
 }) => {
   return (
     <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center ">
@@ -17,7 +18,7 @@ const StatsAndFilters = ({
           variant="secondary"
           className="bg-white/50 text-accent-foreground border-info/20"
         >
-          {activeTasksCount} {FilterType.pending}
+          {activeTasksCount} {FilterType.active}
         </Badge>
         <Badge
           variant="secondary"
@@ -35,6 +36,7 @@ const StatsAndFilters = ({
             variant={filter === type ? "gradient" : "ghost"}
             size="sm"
             className="capitalize"
+            onClick={() => setFilter(type)}
           >
             <Filter className="size-4"/>
             {FilterType[type]}

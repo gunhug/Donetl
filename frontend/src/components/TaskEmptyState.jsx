@@ -9,8 +9,8 @@ const TaskEmptyState = ({ filter }) => {
         <Circle className="mx-auto size-12 text-muted-foreground" />
         <div>
           <h3 className="font-medium text-foreground">
-            {filter === "pending"
-              ? "No pending tasks"
+            {filter === "active"
+              ? "No active tasks"
               : filter === "completed"
                 ? "No completed tasks"
                 : "No tasks"}
@@ -19,7 +19,7 @@ const TaskEmptyState = ({ filter }) => {
           <p className="text-sm text-muted-foreground">
             {filter === "all"
               ? "You have no tasks. Start by creating a new task!"
-              : `You have no ${filter} tasks. ${filter === "pending" ? "Create some tasks to get started!" : "Great job on completing your tasks!"}`}
+              : `You have no ${filter} tasks. ${filter === "active" ? "Create some tasks to get started!" : "Great job on completing your tasks!"}`}
           </p>
         </div>
       </div>
