@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import AddTask from "@/components/AddTask";
 import StatsAndFilters from "@/components/StatsAndFilters";
@@ -6,8 +6,28 @@ import TaskList from "@/components/TaskList";
 import TaskListPagination from "@/components/TaskListPagination";
 import DateTimeFilter from "@/components/DateTimeFilter";
 import Footer from "@/components/Footer";
+import { toast } from "sonner";
 
 const HomePage = () => {
+  const [taskBuffer, setTaskBuffer] = useState([]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+
+  const fetchTasks = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/tasks");
+      const data = await res.json();
+      setTaskBuffer(data.tasks);
+      console.log("Fetched tasks:", data.tasks);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+
+      toast.error("Failed to fetch tasks. Please try again later."); // Show error toast
+    }
+  };
   return (
     <div className="min-h-screen w-full bg-white relative">
       {/* Teal Glow Background */}

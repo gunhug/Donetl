@@ -5,7 +5,7 @@ import NotFound from "./pages/NotFound";
 function App() {
   return (
     <>
-      <Toaster />
+      <Toaster richColors/>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
