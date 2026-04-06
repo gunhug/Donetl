@@ -1,8 +1,35 @@
-import React from 'react'
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox"
 
-const DateTimeFilter = () => {
+import { options } from "@/lib/data"
+
+const DateTimeFilter = ({ dateQuery, setDateQuery }) => {
   return (
-    <div>DateTimeFilter</div>
+    (
+    <Combobox
+      value={dateQuery}
+      onValueChange={setDateQuery}
+      items={options.map((option) => option.label)}
+    >
+      <ComboboxInput placeholder="Select a time range" />
+      <ComboboxContent>
+        <ComboboxEmpty>No time range found.</ComboboxEmpty>
+        <ComboboxList>
+          {(item) => (
+            <ComboboxItem key={item} value={item}>
+              {item}
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  )
   )
 }
 
