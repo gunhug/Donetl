@@ -8,6 +8,7 @@ import DateTimeFilter from "@/components/DateTimeFilter";
 import Footer from "@/components/Footer";
 import { toast } from "sonner";
 import api from "@/lib/axios";
+import { visibleTaskLimit } from "@/lib/data";
 
 const HomePage = () => {
   const [taskBuffer, setTaskBuffer] = useState([]);
@@ -15,10 +16,15 @@ const HomePage = () => {
   const [completedTasksCount, setCompletedTasksCount] = useState(0);
   const [filter, setFilter] = useState("all");
   const [dateQuery, setDateQuery] = useState("today");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchTasks();
   }, [dateQuery]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, dateQuery]);
 
   // logic để fetch tasks từ backend
   const fetchTasks = async () => {
@@ -49,7 +55,33 @@ const HomePage = () => {
   const handleTaskChanged = () => {
     fetchTasks();
   };
-  
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const visibleTasks = filteredTasks.slice(
+    (currentPage - 1) * visibleTaskLimit,
+    currentPage * visibleTaskLimit,
+  );
+
+  if (visibleTasks.length === 0) {
+    handlePrev(1);
+  }
+
+  const totalPages = Math.ceil(filteredTasks.length / visibleTaskLimit);
   return (
     <div className="min-h-screen w-full bg-white relative">
       {/* Teal Glow Background */}
@@ -79,11 +111,21 @@ const HomePage = () => {
           />
 
           {/* Danh sách nhiệm vụ */}
-          <TaskList filteredTasks={filteredTasks} filter={filter} handleTaskChanged={handleTaskChanged}/>
+          <TaskList
+            filteredTasks={visibleTasks}
+            filter={filter}
+            handleTaskChanged={handleTaskChanged}
+          />
 
           {/* Phân trang và lọc theo date */}
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <TaskListPagination />
+            <TaskListPagination
+              handleNext={handleNext}
+              handlePrev={handlePrev}
+              handlePageChange={handlePageChange}
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
             <DateTimeFilter dateQuery={dateQuery} setDateQuery={setDateQuery} />
           </div>
 
