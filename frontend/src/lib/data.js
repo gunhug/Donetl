@@ -24,3 +24,5 @@ export const options = [
     label: "All Tasks",
   },
 ];
+
+export const visibleTaskLimit = 4;
